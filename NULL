@@ -1,0 +1,40 @@
+ER-ДИАГРАММА 
+https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf 
+
+-- TASK
+-- Из таблицы invoice выгрузите поле с городами оформления счёта. Выгрузите только те записи, в которых на месте индекса стоит пропуск. Данные с индексами хранит поле billing_postal_code
+
+SELECT billing_city
+FROM invoice
+WHERE billing_postal_code IS NULL;
+
+-- TASK
+-- Дополните предыдущий запрос. Исключите из выдачи записи с пропусками в поле billing_state. Выберите записи, в которых сумма заказа в поле total не ниже 15 долларов.
+
+SELECT billing_city
+FROM invoice
+WHERE billing_postal_code IS NULL
+AND billing_state IS NOT NULL
+AND total > 15;
+
+-- TASK
+-- Найдите треки длиннее 250000 миллисекунд, в названии которых есть слово Moon, но автор трека не указан.
+-- Выгрузите номера альбомов, в которых находятся выбранные треки.
+
+SELECT album_id
+FROM track
+WHERE milliseconds > 250000
+AND name LIKE '%Moon%'
+AND composer IS NULL;
+
+-- TASK
+-- Найдите покупателей, которые не указали место работы, регион проживания, телефон и факс. Отобразите их имена, фамилии и страны проживания.
+
+SELECT first_name,
+       last_name,
+       country
+FROM client
+WHERE fax IS NULL
+AND phone IS NULL
+AND state IS NULL
+AND company IS NULL;
