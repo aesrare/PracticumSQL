@@ -1,0 +1,69 @@
+ER https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf
+-- TASK
+--  Напишите запрос, который выгрузит общую выручку (поле total) в США (англ. USA). Информацию о стране хранит поле billing_country.
+
+SELECT SUM(total)
+FROM invoice
+WHERE billing_country = 'USA';
+
+-- TASK
+-- Теперь можно проверить, как отличаются данные по городам. Посчитайте общую выручку, количество заказов, среднюю выручку для каждого города США. Нужное поле — billing_city.
+
+SELECT billing_city,
+       SUM(total),
+       COUNT(total),
+       AVG(total)
+FROM invoice
+WHERE billing_country = 'USA'
+GROUP BY billing_city;
+
+-- TASK
+-- Проверьте, какую выручку в среднем приносит каждый покупатель. Выгрузите общую сумму выручки, число уникальных покупателей (поле customer_id) и среднюю выручку на  уникального пользователя для страны США.
+
+SELECT SUM(total),
+       SUM(total)/COUNT(DISTINCT customer_id),
+       COUNT(DISTINCT customer_id)
+FROM invoice
+WHERE billing_country = 'USA';
+
+-- TASK
+-- Дополните предыдущий запрос. Сгруппируйте данные по неделе заказа. Для этого нужно усечь дату из поля invoice_date, округлив её до первого дня недели. Обратите внимание, поле invoice_date хранит данные типа varchar.
+
+SELECT DATE_TRUNC('week', CAST(invoice_date AS timestamp)),
+       SUM(total),
+	   COUNT(DISTINCT customer_id),
+	   SUM(total)/COUNT(DISTINCT customer_id)
+FROM invoice
+WHERE billing_country = 'USA'
+GROUP BY DATE_TRUNC('week', CAST(invoice_date AS timestamp));
+
+-- TASK
+-- Посчитайте, сколько пользователей с почтовыми доменами yahoo и gmail обслужил каждый сотрудник. В итоговой таблице должны быть два поля:
+-- идентификатор сотрудника,
+-- количество пользователей.
+
+SELECT support_rep_id,
+       COUNT(customer_id)
+FROM client
+WHERE email LIKE '%yahoo%'
+OR email LIKE'%gmail%'
+GROUP BY support_rep_id 
+
+-- TASK
+-- Создайте новое поле с категориями: 
+-- заказы на сумму меньше одного доллара получат категорию 'low cost';
+-- заказы на сумму от одного доллара и выше получат категорию 'high cost'.
+-- Для каждой категории посчитайте сумму значений в поле total, но только для тех заказов, при оформлении которых указан почтовый код. В итоговую таблицу должны войти только два поля
+
+SELECT 
+      CASE
+      WHEN total < 1 THEN 'low cost'
+      WHEN total >= 1 THEN 'high cost'
+      END,
+      SUM(total)
+FROM invoice
+WHERE billing_postal_code IS NOT NULL
+GROUP BY CASE
+         WHEN total < 1 THEN 'low cost'
+         WHEN total >= 1 THEN 'high cost'
+      END;
