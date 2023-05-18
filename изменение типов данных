@@ -1,0 +1,19 @@
+ER https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf
+-- TASK
+-- Выгрузите из таблицы track поля milliseconds и bytes. Значения в обоих полях должны быть строками. Используйте тип данных для строк нефиксированной длины.
+
+SELECT CAST(milliseconds AS varchar),
+       CAST(bytes AS varchar)
+FROM track;
+
+-- TASK
+-- Выгрузите из таблицы invoice поле total. Оставьте только целую часть числа.
+
+SELECT CAST(total AS integer)
+FROM invoice;
+
+-- TASK
+-- Выгрузите из таблицы staff дни рождения сотрудников. Необходимые значения в виде строк хранит поле birth_date. Сформируйте запрос так, чтобы на экране отобразилась только дата.
+
+SELECT CAST(birth_date AS date)
+FROM staff;
