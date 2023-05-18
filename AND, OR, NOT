@@ -1,0 +1,57 @@
+-- ER https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf
+-- TASK
+-- Теперь попробуйте отфильтровать данные о счетах — их хранит таблица invoice. Выгрузите из таблицы поле с суммой заказа total и поле с идентификатором покупателя customer_id. Счета должны быть оформлены в трёх городах: Дублине (англ. Dublin), Лондоне (англ. London) или Париже (англ. Paris). Информацию о городе хранит поле billing_city.
+
+SELECT total,
+       customer_id
+FROM invoice
+WHERE billing_city = 'London' OR billing_city = 'Paris' OR billing_city = 'Dublin'; 
+
+-- TASK
+-- Из таблицы invoice выгрузите поля total и customer_id. Значение total должно быть больше или равно 5, а значение customer_id должно равняться 40 или 46.
+
+SELECT total,
+       customer_id
+FROM invoice
+WHERE total >= 5 
+AND (customer_id = 40 
+OR customer_id = 46);
+
+-- TASK
+-- Теперь объедините условия. Из таблицы invoice выгрузите поля total и customer_id. Счёт должен быть оформлен в Дублине (англ. Dublin), Лондоне (англ. London) или Париже (англ. Paris). Значение total должно быть больше или равно 5, а значение customer_id должно равняться 40 или 46.
+
+SELECT total,
+       customer_id
+FROM invoice
+WHERE total >= 5
+AND (billing_city = 'Dublin' OR billing_city = 'London' OR billing_city  = 'Paris')
+AND (customer_id = 40 OR customer_id = 46);
+
+-- TASK
+-- Чтобы выполнить задачу, аналитику приходится много работать с описанием базы. В следующих заданиях не будет указаний на конкретные поля. Попробуйте найти поля сами, пользуясь схемой базы данных и её описанием. 
+-- Выгрузите фамилии и номера телефонов пользователей из таблицы client. В итоговую таблицу должны войти данные о пользователях, которые живут в США (англ. USA) или Франции (англ. France). Удостоверьтесь, что пользователи обращались в поддержку к сотруднику с идентификатором 3.
+
+SELECT last_name,
+       phone
+FROM client
+WHERE (country = 'USA' OR country = 'France') 
+AND support_rep_id = 3;
+
+-- TASK
+-- Из таблицы movie выгрузите названия фильмов, стоимость аренды которых не превышает двух долларов, а срок аренды составляет больше шести дней. Выгруженные фильмы не должны относиться к рейтингам PG и PG-13.
+
+SELECT title
+FROM movie
+WHERE rental_rate < 2 
+AND rental_duration > 6
+AND (rating != 'PG-13' AND rating != 'PG');
+
+-- TASK
+-- Выгрузите адреса и города оформления заказов, сделанных в сентябре 2009 года. Отберите данные о заказах, оформленных во всех странах, кроме США и Бразилии. Стоимость заказа должна быть больше двух долларов
+
+SELECT billing_address,
+       billing_city
+FROM invoice
+WHERE (invoice_date > '20090901' AND invoice_date < '20091001')
+AND (billing_country != 'USA' AND billing_country != 'Brazil')
+AND total > 2;
