@@ -1,0 +1,33 @@
+ER https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf
+-- TASK
+-- В одном из прошлых уроков вы выгружали данные из таблицы invoice. Из той выгрузки было не очень понятно, какие треки входят в заказ. Теперь изучите таблицу invoice_line, которая хранит информацию о купленных треках. Выгрузите все значения из таблицы, отфильтровав треки дороже 0.99. Стоимость композиций хранит столбец unit_price.
+
+SELECT *
+FROM invoice_line
+WHERE unit_price > 0.99;
+
+-- TASK
+-- Из таблицы client выгрузите несколько полей: first_name с именем покупателя, last_name с фамилией и city, в котором указан город проживания. Оставьте записи только о тех покупателях, которые живут в Бразилии (англ. Brazil). Страна проживания хранится в поле country.
+
+SELECT first_name,
+       last_name,
+       city
+FROM client
+WHERE country = 'Brazil' ;
+
+-- TASK
+-- Нужно проверить, где и когда совершали самые крупные покупки. Из таблицы invoice выгрузите поле billing_address, которое хранит адрес выставления счёта, и поле invoice_date с датой покупки. Дата указана в формате 'YYYY-MM-DD HH:MM:SS', нужно оставить только часть 'YYYY-MM-DD'. Отфильтруйте записи, в которых значение поля total больше или равно 8.
+
+SELECT billing_address,
+       CAST(invoice_date AS date)
+FROM invoice
+WHERE total >= 8;
+
+-- TASK
+-- Теперь из таблицы invoice выгрузите заказы, оформленные не раньше 6 января 2009 года. В итоговую таблицу должен войти идентификатор, страна оформления заказа и дата в формате 'YYYY-MM-DD'
+
+SELECT invoice_id, 
+       billing_country,
+       CAST(invoice_date AS date)
+FROM invoice
+WHERE invoice_date > '2009-01-06';
