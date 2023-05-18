@@ -1,0 +1,64 @@
+ER https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf
+-- TASK
+-- Выгрузите из таблицы playlist все названия плейлистов из поля name, в которых есть слово 'Classic' и производные от него.
+
+SELECT name
+FROM playlist 
+WHERE name LIKE '%Classic%';
+
+-- TASK
+-- Выгрузите из таблицы invoice данные об адресе и стране. Отфильтруйте данные по стране: оставьте только США (англ. USA), Индию (англ. India), Канаду (англ. Canada), Аргентину (англ. Argentina) и Францию (англ. France).
+
+SELECT billing_address,
+       billing_country
+FROM invoice
+WHERE billing_country IN ('USA', 
+         'India',
+         'Canada',
+         'Argentina',
+         'France');
+
+-- TASK
+-- Дополните предыдущий запрос. Исключите из городов доставки billing_city Редмонд (англ. Redmond), Лион (англ. Lyon) и Дели (англ. Delhi). Само поле billing_city выводить не нужно.
+
+SELECT billing_address,
+       billing_country
+FROM invoice
+WHERE billing_country IN ('USA',
+                          'India',
+                          'Canada',
+                          'Argentina',
+                          'France')
+		  AND billing_city NOT IN ('Redmond',
+                                  'Lyon',
+                                  'Delhi');
+
+-- TASK
+-- Выгрузите все поля из таблицы invoice. Информацию о дате покупки хранит поле invoice_date: выберите только те заказы, которые были оформлены в период с '2009-03-04' по '2012-02-09' включительно. Обратите внимание, что у поля invoice_date тип данных varchar.
+Сумма покупки total должна быть меньше 5. Кроме того, исключите из запроса Канаду (англ. Canada), Бразилию (англ. Brazil) и Финляндию (англ. Finland). Название страны содержит поле billing_country.
+
+SELECT *
+FROM invoice
+WHERE CAST(invoice_date AS varchar) BETWEEN '2009-03-04' AND '2012-02-10'
+AND total < 5
+AND billing_country NOT IN ('Canada', 
+                           'Brazil',
+                           'Finland')
+     
+-- TASK
+-- Выгрузите из таблицы movie название фильмов, описание которых заканчивается подстрокой Mexico. Аренда фильмов из итоговой таблицы должна составлять меньше двух долларов либо их рейтинг не должен быть PG-13.
+
+SELECT title
+FROM movie
+WHERE description LIKE '%Mexico' 
+AND (rental_rate < 2 OR rating != 'PG-13');
+
+-- TASK
+-- Из таблицы с треками отберите названия композиций, которые соответствуют условиям. В итоговую таблицу должны войти: треки длиннее 300000 миллисекунд, в создании которых принимал участие Bono, с идентификаторами жанра 7, 8, 9, 10; либо треки, размер которых превышает 1000000000 байт.
+
+SELECT name
+FROM track
+WHERE milliseconds > 300000
+AND composer LIKE '%Bono%'
+AND genre_id IN ('7', '8', '9', '10')
+OR bytes > 1000000000;
