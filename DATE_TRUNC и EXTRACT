@@ -1,0 +1,48 @@
+-- ER https://code.s3.yandex.net/SQL%20for%20data%20and%20analytics/ER/basic_sql.pdf
+-- TASK
+-- Добавьте условие в код задания: выгрузите из таблицы invoice несколько полей, в которых указаны идентификаторы покупателей от 20 до 50 включительно.
+
+SELECT customer_id,
+       invoice_date,
+       total
+FROM invoice
+WHERE customer_id BETWEEN 20 AND 50; 
+
+-- TASK
+-- Добавьте к выгруженным полям информацию о месяце и неделе заказа. Информацию о дате хранит поле invoice_date. Месяц заказа должен быть представлен первым числом месяца в формате '2009-01-01 00:00:00', а неделя заказа — номером недели. 
+
+SELECT customer_id,
+       invoice_date,
+       total,
+       DATE_TRUNC('MONTH', CAST(invoice_date AS timestamp)),
+       EXTRACT(WEEK FROM CAST(invoice_date AS timestamp))
+FROM invoice
+WHERE customer_id BETWEEN 20 AND 50;
+
+-- TASK
+-- Отфильтруйте получившуюся таблицу по номерам недель. Оставьте в таблице данные за 5, 7, 10, 33 и 48-ю недели.
+
+SELECT customer_id,
+       invoice_date,
+       total,
+       DATE_TRUNC('month', CAST(invoice_date AS timestamp)),
+       EXTRACT(WEEK FROM CAST(invoice_date AS timestamp))
+FROM invoice
+WHERE customer_id BETWEEN 20 AND 50
+AND EXTRACT(WEEK FROM CAST(invoice_date AS timestamp)) IN ('5', '7', '10', '33', '48');
+
+-- TASK
+-- Выгрузите из таблицы invoice всю информацию о заказах, оформленных первого числа каждого месяца. Не забудьте привести дату к типу timestamp.
+Подсказка
+
+SELECT *
+FROM invoice
+WHERE EXTRACT(DAY FROM CAST(invoice_date AS timestamp)) IN ('1');
+
+-- TASK
+-- Выгрузите адреса электронной почты сотрудников из города Калгари (англ. Calgary), которых наняли на работу в 2002 году.
+
+SELECT email
+FROM staff
+WHERE city = 'Calgary' 
+AND EXTRACT(YEAR FROM CAST(hire_date AS timestamp)) IN ('2002');
